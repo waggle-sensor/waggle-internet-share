@@ -7,7 +7,6 @@ Wants=network-online.target
 Type=simple
 Restart=on-failure
 RestartSec=30
-ExecStartPre=/bin/sh -c 'until ping -c1 8.8.8.8; do sleep 1; done;'
 ExecStart=/bin/bash /usr/bin/waggle-internet-share
 
 [Install]

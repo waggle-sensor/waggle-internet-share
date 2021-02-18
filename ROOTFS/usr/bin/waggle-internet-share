@@ -1,6 +1,12 @@
 #!/bin/bash -ex
 
 internetInterface=$(route | grep '^default' | grep -o '[^ ]*$' | head -n 1)
+
+if [ -z "${internetInterface}" ]; then
+	echo "Waiting for Interface..."
+	exit -1
+fi
+
 echo "Setting up sharing of internet capabilities of interface $internetInterface to devices connected on lan0"
 
 echo 1 > /proc/sys/net/ipv4/ip_forward

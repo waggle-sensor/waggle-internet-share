@@ -19,7 +19,7 @@ jobs:
         id: build_project
         run: |
           ./build.sh
-          echo "##[set-output name=deb_pxeboot;]$(ls *.deb)"
+          echo "##[set-output name=deb_internet_share;]$(ls *.deb)"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -30,13 +30,13 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-      - name: Upload Release Asset (RPI-PxEBoot)
-        id: upload-release-asset-rpi-pxeboot
+      - name: Upload Release Asset (Internet-Share)
+        id: upload-release-asset-internet-share
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ steps.build_project.outputs.deb_pxeboot }}
-          asset_name: ${{ steps.build_project.outputs.deb_pxeboot }}
+          asset_path: ./${{ steps.build_project.outputs.deb_internet_share }}
+          asset_name: ${{ steps.build_project.outputs.deb_internet_share }}
           asset_content_type: application/vnd.debian.binary-package

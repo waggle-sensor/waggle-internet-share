@@ -4,7 +4,7 @@ mkdir -p /tmp/reg
 
 # Build the local internet share debian package
 BASEDIR=/tmp/reg
-NAME=wagggle-internet-share
+NAME=waggle-internet-share
 ARCH=all
 
 mkdir -p ${BASEDIR}/DEBIAN

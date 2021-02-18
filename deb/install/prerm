@@ -1,4 +1,4 @@
 #!/bin/bash
 
 systemctl stop waggle-internet-share.service || true
-systemctl disable waggle-interface-share.service || true
+systemctl disable waggle-internet-share.service || true

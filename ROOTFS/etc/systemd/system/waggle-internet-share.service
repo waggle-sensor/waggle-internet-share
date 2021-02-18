@@ -1,0 +1,13 @@
+[Unit]
+Description=Service to enable internet forwarding over lan0 interface
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=30
+ExecStart=/bin/bash /usr/bin/waggle-internet-share
+
+[Install]
+WantedBy=multi-user.target

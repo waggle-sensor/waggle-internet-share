@@ -1,0 +1,8 @@
+#!/bin/bash
+
+case "${1}" in
+  configure)
+    echo "Enabling Waggle Local Internet Share Service"
+    systemctl enable waggle-internet-share.service
+    ;;
+esac

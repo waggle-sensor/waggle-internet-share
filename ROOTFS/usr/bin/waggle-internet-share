@@ -1,0 +1,11 @@
+#!/bin/bash -ex
+
+internetInterface=$(route | grep '^default' | grep -o '[^ ]*$' | head -n 1)
+echo "Setting up sharing of internet capabilities of interface $internetInterface to devices connected on lan0"
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -o $internetInterface -j MASQUERADE
+iptables -I FORWARD -o $internetInterface -s 10.31.81.0/24 -j ACCEPT
+iptables -I INPUT -s 10.31.81.0/24 -j ACCEPT
+
+echo "Internet sharing over local interface lan0 enabled"

@@ -1,5 +1,5 @@
 [Unit]
-Description=Service to enable internet forwarding over lan0 interface
+Description=Waggle Internet Sharing Service
 After=network-online.target
 Wants=network-online.target
 

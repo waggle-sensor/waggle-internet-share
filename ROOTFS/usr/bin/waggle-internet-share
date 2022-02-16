@@ -1,16 +1,28 @@
 #!/bin/bash -ex
 
-echo "Setting up sharing of internet capabilities of interface(s) [wan0, wifi0, modem0] to devices connected on lan0"
+INTERFACE_KEYS=(
+    wlan-interface
+    wifi-interface
+    modem-interface
+)
+LAN_INTF=$(waggle-get-config -s hardware -k lan-interface)
+LAN_IP_MASK="$(waggle-get-config -s network -k static-ip-nx)/24"
+
+echo "Setting up sharing of internet capabilities to devices connected on ${LAN_INTF}"
 
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
-iptables -t nat -A POSTROUTING -o wan0 -j MASQUERADE
-iptables -t nat -A POSTROUTING -o wifi0 -j MASQUERADE
-iptables -t nat -A POSTROUTING -o modem0 -j MASQUERADE
-iptables -I FORWARD -o wan0 -s 10.31.81.0/24 -j ACCEPT
-iptables -I FORWARD -o wifi0 -s 10.31.81.0/24 -j ACCEPT
-iptables -I FORWARD -o modem0 -s 10.31.81.0/24 -j ACCEPT
+# setup the postrouting and forward rules only for the interfaces defined in the config
+for intf_key in "${INTERFACE_KEYS[@]}"; do
+    if intf=$(waggle-get-config -s hardware -k ${intf_key}); then
+        echo " - configuring interface [${intf}]"
+        iptables -t nat -A POSTROUTING -o ${intf} -j MASQUERADE
+        iptables -I FORWARD -o ${intf} -s ${LAN_IP_MASK} -j ACCEPT
+    else
+        echo " - interface key [${intf_key}] not defined, skipping"
+    fi
+done
 
-iptables -I INPUT -s 10.31.81.0/24 -j ACCEPT
+iptables -I INPUT -s ${LAN_IP_MASK} -j ACCEPT
 
-echo "Internet sharing over local interface lan0 enabled"
+echo "Internet sharing over local interface ${LAN_INTF} enabled"
